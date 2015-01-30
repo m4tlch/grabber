@@ -58,3 +58,5 @@ field collectin аналогично.
 ## Документация
 Схема
 
+
+![alt text](https://raw.githubusercontent.com/vital-fadeev/grabber/master/css/overview.png "Scheme")
