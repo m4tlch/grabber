@@ -1,0 +1,103 @@
+<?php
+
+require_once(__DIR__ . '/grabber.menu.php');
+require_once(__DIR__ . '/include/Registry.php');
+require_once(__DIR__ . '/include/ProcessHelper.php');
+require_once(__DIR__ . '/include/Logger.php');
+require_once(__DIR__ . '/include/Tracker.php');
+require_once(__DIR__ . '/include/ProxyList.php');
+
+function grabber_cron() {
+    //$scheduler = \Grabber\Registry::get_scheduler();
+    //$scheduler->execute();
+}
+
+function grabber_execute() {
+    \Grabber\ProxyList::update_file();
+
+    $scheduler = \Grabber\Registry::get_scheduler();
+    $scheduler->execute();
+}
+
+function grabber_execute_processor($processor_name) {
+    $processor_name = filter_var($processor_name, FILTER_SANITIZE_STRING);
+    $semaphore = \Grabber\Registry::get_semaphore();
+
+    // wait for called process finished
+    sleep(3); // TODO check request flag (header|var)
+
+    if ($semaphore->is_set("Processor-{$processor_name}")) {
+        \Grabber\Logger::log("Execute processor: " . $processor_name . " - Already executed.");
+        print "Already executed: {$processor_name}.";
+        exit();
+    }
+
+    $semaphore->set("Processor-{$processor_name}");
+
+    \Grabber\Logger::log("Execute processor: " . $processor_name . " ...");
+    try {
+        $processor = \Grabber\Registry::get_processor($processor_name);
+        $processor->execute();
+        \Grabber\Logger::log("Finish processor: " . get_class($processor) . " - [ OK ]");
+        print 'OK';
+
+    } catch (\Grabber\TrackerTimeoutException $e) {
+        \Grabber\Logger::log("Processor timeout: " . $processor_name . ': ' . $e->getMessage() . " - [TIME]");
+        \Grabber\ProcessHelper::fork();
+        print 'TIME';
+
+    } catch (\Exception $e) {
+        \Grabber\Logger::error("Processor error: " . $processor_name . ': ' . $e->getMessage());
+        print 'FAIL';
+    }
+
+    exit();
+}
+
+
+function grabber_execute_scanner($scanner_name, $thread_id) {
+    $scanner_name = filter_var($scanner_name, FILTER_SANITIZE_STRING);
+    $thread_id = filter_var($thread_id, FILTER_SANITIZE_NUMBER_INT);
+    $semaphore = \Grabber\Registry::get_semaphore();
+
+    if ($thread_id > \Grabber\ProcessHelper::MAX_SCANNER_THREADS) {
+        print "Maximum: " . \Grabber\ProcessHelper::MAX_SCANNER_THREADS . " thread/scanner. (MAX_SCANNER_THREADS)";
+        exit();
+    }
+
+    // prevent overload
+    sleep(3);
+
+    if ($semaphore->is_set("Scanner-{$scanner_name}-{$thread_id}")) {
+        \Grabber\Logger::log("Execute scanner: {$scanner_name}/{$thread_id} - Already executed.");
+        print "Already executed: {$scanner_name}/{$thread_id}.";
+        exit();
+    }
+
+    $semaphore->set("Scanner-{$scanner_name}-{$thread_id}");
+
+    \Grabber\Logger::log("Execute scanner: {$scanner_name}/{$thread_id}...");
+    try {
+        $scanner = \Grabber\Registry::get_scanner($scanner_name);
+        $scanner->execute();
+        \Grabber\Logger::log("Finish scanner: " . get_class($scanner) . "/{$thread_id} - [ OK ]");
+        print 'OK';
+
+    } catch (\Grabber\TrackerTimeoutException $e) {
+        \Grabber\Logger::log("Scanner timeout: {$scanner_name}/{$thread_id}: " . $e->getMessage() . " - [TIME]");
+        \Grabber\ProcessHelper::fork();
+        print 'TIME';
+
+    } catch (\Exception $e) {
+        \Grabber\Logger::error("Scanner error: {$scanner_name}/{$thread_id}: " . $e->getMessage());
+        print 'FAIL';
+    }
+
+    exit();
+}
+
+function grabber_execute_scanner_all($scanner_name) {
+    $scanner_name = filter_var($scanner_name, FILTER_SANITIZE_STRING);
+    \Grabber\ProcessHelper::execute_scanner($scanner_name);
+}
+

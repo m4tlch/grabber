@@ -1,0 +1,7 @@
+name = Grabber
+description = Grab  sites. And load into Drupal
+core = 7.x
+
+configure = admin/config/administration/grabber
+
+dependencies[] = entity

@@ -1,0 +1,167 @@
+#grabber-concrete-settings-form {}
+#grabber-concrete-settings-form .form-type-select label { display: inline-block; width: 180px; }
+#grabber-concrete-settings-form .form-type-select select { display: inline-block; width: 200px; }
+
+#grabber-map {
+    background: url('overview.png');
+    position: relative;
+    width: 1075px;
+    height: 575px;
+    margin: 30px 0;
+}
+
+#grabber-map .object {
+    position: absolute;
+    border: 1px solid black;
+    background: white;
+    width: 100px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+}
+#grabber-map .object:hover {
+    border: 1px solid red;
+}
+
+#grabber-map #grabber-map-loader {
+    left: 270px;
+    top: 350px;
+}
+
+#grabber-map #grabber-map-prefetcher {
+    left: 390px;
+    top: 350px;
+}
+
+#grabber-map #grabber-map-filler {
+    left: 510px;
+    top: 350px;
+}
+
+#grabber-map #grabber-map-optimizer {
+    left: 630px;
+    top: 350px;
+}
+
+#grabber-map #grabber-map-collector {
+    left: 750px;
+    top: 350px;
+}
+
+#grabber-map #grabber-map-logger {
+    left: 0px;
+    top: 210px;
+}
+
+#grabber-map #grabber-map-store {
+    left: 510px;
+    top: 510px;
+}
+
+#grabber-map #grabber-map-writer {
+    left:110px;
+    top: 420px;
+}
+
+#grabber-map #grabber-map-comment-writer {
+    left:110px;
+    top: 490px;
+    line-height: 1;
+    padding: 12px 0;
+}
+
+/* Scanners*/
+#grabber-map #grabber-map-Scanner1 {
+    left:910px;
+    top: 280px;
+}
+
+#grabber-map #grabber-map-Scanner2 {
+    left:910px;
+    top: 350px;
+}
+
+#grabber-map #grabber-map-more {
+    left:910px;
+    top: 420px;
+}
+
+#grabber-map #grabber-scanners-menu {
+    position: absolute;
+    display: none;
+}
+
+#grabber-map #grabber-scanners-menu .menu {
+    display: none;
+}
+
+#grabber-map #grabber-map-more:hover #grabber-scanners-menu {
+    display: block;
+}
+
+#grabber-map #grabber-scanners-menu .object {
+    position: relative;
+}
+#grabber-map #grabber-scanners-menu .object:hover .menu {
+    display: block;
+}
+
+
+#grabber-map .object .menu {
+    position: absolute;
+    top: 0;
+    left: 0px;
+    display: none;
+    line-height: normal;
+    background: #222;
+    border: 1px solid #ccc;
+}
+
+#grabber-map .object:hover .menu {
+    display: block;
+}
+
+#grabber-map .object .menu .menu-item {
+    padding: 6px 10px;
+}
+#grabber-map .object .menu .menu-item:hover {
+    background: #333;
+}
+
+#grabber-map .counter {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: small;
+    padding: 2px 4px;
+    line-height: normal;
+    border: 1px solid #c0c0c0;
+}
+#grabber-map .counter-error {
+    border-color: red;
+}
+#grabber-map .indicator-executed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    font-size: small;
+    padding: 2px 4px;
+    line-height: normal;
+    border: 1px solid #008000;
+    background: #90ee90;
+}
+
+#edit-set1,
+#edit-set2,
+#edit-set3 {
+    display: inline-block;
+    width: 300px;
+    vertical-align: top;
+}
+
+#edit-grabber-scan-interval,
+#edit-grabber-load-interval {
+    width: 100%;
+}

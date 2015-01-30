@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * @file
+ * Schema definitions install/update/uninstall hooks.
+ */
+
+/**
+ * Implement hook_uninstall()
+ */
+function grabber_uninstall() {
+    //variable_del('variable_del');
+    //variable_del('grabber_cron_last_run');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function grabber_schema() {
+    $schema = array();
+
+    $schema['grabber_log'] = array(
+        'description' => 'Table that contains logs of grabber events.',
+        'fields' => array(
+            'id' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key',
+            ),
+            'sid' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'Unix timestamp - session id.',
+            ),
+            'created' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'Unix timestamp of when event occurred.',
+            ),
+            'type' => array(
+                'type' => 'varchar',
+                'length' => 64,
+                'not null' => TRUE,
+                'default' => '',
+                'description' => 'Type of log message: info, error',
+            ),
+            'message' => array(
+                'type' => 'text',
+                'not null' => FALSE,
+                'size' => 'big',
+                'description' => 'Text of log message.',
+            ),
+            'file' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'not null' => FALSE,
+                'description' => 'File name',
+            ),
+            'source' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'not null' => FALSE,
+                'description' => 'Source class',
+            ),
+            'title' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'not null' => FALSE,
+                'description' => 'Title',
+            ),
+            'nid' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => FALSE,
+                'description' => 'Node id of the source, if available.',
+            ),
+            'fields' => array(
+                'type' => 'text',
+                'length' => 255,
+                'not null' => FALSE,
+                'description' => 'Writed fields',
+            ),
+        ),
+        'primary key' => array('id'),
+        'indexes' => array(
+            'id' => array('id'),
+            'created' => array('created'),
+            'type' => array('type'),
+        ),
+    );
+    return $schema;
+}
